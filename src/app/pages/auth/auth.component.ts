@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-auth',
@@ -17,7 +18,8 @@ export class AuthComponent {
 
   constructor(private fb: FormBuilder,
               private authService: AuthService,
-              private router: Router) {
+              private router: Router,
+              private toast: ToastrService) {
     this.authForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
@@ -29,7 +31,7 @@ export class AuthComponent {
       const { email, password } = this.authForm.value;
       this.authService.signUp(email, password).subscribe({
         next: () => this.router.navigate(['/blocks']),
-        error: (error) => console.error(error)
+        error: (error) => this.toast.error(error)
       });
     }
   }
@@ -39,7 +41,7 @@ export class AuthComponent {
       const { email, password } = this.authForm.value;
       this.authService.signInWithEmail(email, password).subscribe({
         next: () => this.router.navigate(['/blocks']),
-        error: (error) => console.error(error)
+        error: (error) => this.toast.error(error)
       });
     }
   }
@@ -47,7 +49,7 @@ export class AuthComponent {
   loginWithGitHub() {
     this.authService.signInWithGitHub().subscribe({
       next: () => this.router.navigate(['/blocks']),
-      error: (error) => console.error(error)
+      error: (error) => this.toast.error(error)
     });
   }
 }
