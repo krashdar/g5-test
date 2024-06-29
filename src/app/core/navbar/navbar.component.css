@@ -1,0 +1,15 @@
+.navbar {
+    background-color: #f8f9fa;
+}
+
+.navbar-nav {
+    margin-left: auto;
+}
+
+.nav-link {
+    cursor: pointer;
+}
+
+.rounded-circle {
+    border-radius: 50%;
+}
