@@ -23,7 +23,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/g5-test",
+            "outputPath": "(public)",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
