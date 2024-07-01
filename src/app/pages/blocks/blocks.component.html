@@ -15,7 +15,7 @@
     </div>
     <ng-template #totalTemplate>
       <div class="col-12">
-        <p class="text-muted">Total results: {{ this.totalResultCount.toString() }}</p>
+        <p class="text-muted">Total results: {{ totalResultCount }}</p>
       </div>
     </ng-template>
     <div *ngFor="let user of users" class="col-md-3 mb-3">
@@ -32,10 +32,10 @@
     <div class="col-md-6">
       <p>Displaying {{ users.length }} items</p>
     </div>
-    <div class="col-md-6 text-right">
-      <button class="btn btn-link {{ currentPage > 1 ? '' : 'hidden' }}" (click)="onPageChange('prev')"><i class="bi bi-arrow-left"></i></button>
+    <div class="col-md-6 text-end">
+      <button class="btn btn-link" [class.hidden]="currentPage <= 1" (click)="onPageChange('prev')"><i class="bi bi-arrow-left"></i></button>
       <span class="mx-2">{{ currentPage }}</span>
-      <button class="btn btn-link {{ currentPage < totalPages ? '' : 'hidden' }}" (click)="onPageChange('next')"><i class="bi bi-arrow-right"></i></button>
+      <button class="btn btn-link" [class.hidden]="currentPage >= totalPages" (click)="onPageChange('next')"><i class="bi bi-arrow-right"></i></button>
     </div>
   </div>
 </div>

@@ -33,49 +33,51 @@
     </div>
     <ng-template #totalTemplate>
       <div class="col-12">
-        <p class="text-muted">Total results: {{ this.totalResultCount.toString() }}</p>
+        <p class="text-muted">Total results: {{ totalResultCount }}</p>
       </div>
     </ng-template>
     <div *ngIf="users.length > 0" class="col-12">
-      <table class="table table-bordered">
-        <thead>
-        <tr>
-          <th *ngFor="let column of columns">{{ column.header }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let user of users" (click)="onSelectUser(user.login)" style="cursor: pointer;">
-          <td *ngFor="let column of columns">
-            <ng-container [ngSwitch]="column.type">
-              <ng-container *ngSwitchCase="'text'">
-                {{ user[column.field] }}
-              </ng-container>
-              <ng-container *ngSwitchCase="'link'">
-                <a [href]="user[column.urlField ?? column.field]" target="_blank" (click)="onViewProfile($event)">
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th *ngFor="let column of columns">{{ column.header }}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let user of users" (click)="onSelectUser(user.login)" style="cursor: pointer;">
+            <td *ngFor="let column of columns">
+              <ng-container [ngSwitch]="column.type">
+                <ng-container *ngSwitchCase="'text'">
                   {{ user[column.field] }}
-                </a>
+                </ng-container>
+                <ng-container *ngSwitchCase="'link'">
+                  <a [href]="user[column.urlField ?? column.field]" target="_blank" (click)="onViewProfile($event)">
+                    {{ user[column.field] }}
+                  </a>
+                </ng-container>
+                <ng-container *ngSwitchCase="'image'">
+                  <img [src]="user[column.field]" alt="{{ user.login }}" height="50">
+                </ng-container>
+                <ng-container *ngSwitchCase="'checkbox'">
+                  <input type="checkbox" [checked]="user[column.field]" disabled>
+                </ng-container>
               </ng-container>
-              <ng-container *ngSwitchCase="'image'">
-                <img [src]="user[column.field]" alt="{{ user.login }}" height="50">
-              </ng-container>
-              <ng-container *ngSwitchCase="'checkbox'">
-                <input type="checkbox" [checked]="user[column.field]" disabled>
-              </ng-container>
-            </ng-container>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
   <div *ngIf="users.length !== 0" class="row mt-3">
     <div class="col-md-6">
       <p>Displaying {{ users.length }} items</p>
     </div>
-    <div class="col-md-6 text-right">
-      <button class="btn btn-link {{ currentPage > 1 ? '' : 'hidden' }}" (click)="onPageChange('prev')"><i class="bi bi-arrow-left"></i></button>
+    <div class="col-md-6 text-end">
+      <button class="btn btn-link" [class.hidden]="currentPage <= 1" (click)="onPageChange('prev')"><i class="bi bi-arrow-left"></i></button>
       <span class="mx-2">{{ currentPage }}</span>
-      <button class="btn btn-link {{ currentPage < totalPages ? '' : 'hidden' }}" (click)="onPageChange('next')"><i class="bi bi-arrow-right"></i></button>
+      <button class="btn btn-link" [class.hidden]="currentPage >= totalPages" (click)="onPageChange('next')"><i class="bi bi-arrow-right"></i></button>
     </div>
   </div>
 </div>
