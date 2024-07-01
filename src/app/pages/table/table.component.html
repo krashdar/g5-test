@@ -1,1 +1,81 @@
-<p>table works!</p>
+<div class="container mt-5">
+  <div class="row mb-3">
+    <div class="col-12">
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+        <div class="input-group mb-3">
+          <input formControlName="query" type="text" class="form-control" placeholder="Search GitHub users">
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="sort" class="form-label">Sort By:</label>
+            <select formControlName="sort" id="sort" class="form-select">
+              <option value="">Best Match</option>
+              <option value="followers">Followers</option>
+              <option value="repositories">Repositories</option>
+              <option value="joined">Joined</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="order" class="form-label">Order:</label>
+            <select formControlName="order" id="order" class="form-select">
+              <option value="desc">Descending</option>
+              <option value="asc">Ascending</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div *ngIf="users.length === 0; else totalTemplate" class="col-12">
+      <p class="text-muted">No results found.</p>
+    </div>
+    <ng-template #totalTemplate>
+      <div class="col-12">
+        <p class="text-muted">Total results: {{ this.totalResultCount.toString() }}</p>
+      </div>
+    </ng-template>
+    <div *ngIf="users.length > 0" class="col-12">
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th *ngFor="let column of columns">{{ column.header }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let user of users" (click)="onSelectUser(user.login)" style="cursor: pointer;">
+          <td *ngFor="let column of columns">
+            <ng-container [ngSwitch]="column.type">
+              <ng-container *ngSwitchCase="'text'">
+                {{ user[column.field] }}
+              </ng-container>
+              <ng-container *ngSwitchCase="'link'">
+                <a [href]="user[column.urlField ?? column.field]" target="_blank" (click)="onViewProfile($event)">
+                  {{ user[column.field] }}
+                </a>
+              </ng-container>
+              <ng-container *ngSwitchCase="'image'">
+                <img [src]="user[column.field]" alt="{{ user.login }}" height="50">
+              </ng-container>
+              <ng-container *ngSwitchCase="'checkbox'">
+                <input type="checkbox" [checked]="user[column.field]" disabled>
+              </ng-container>
+            </ng-container>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div *ngIf="users.length !== 0" class="row mt-3">
+    <div class="col-md-6">
+      <p>Displaying {{ users.length }} items</p>
+    </div>
+    <div class="col-md-6 text-right">
+      <button class="btn btn-link {{ currentPage > 1 ? '' : 'hidden' }}" (click)="onPageChange('prev')"><i class="bi bi-arrow-left"></i></button>
+      <span class="mx-2">{{ currentPage }}</span>
+      <button class="btn btn-link {{ currentPage < totalPages ? '' : 'hidden' }}" (click)="onPageChange('next')"><i class="bi bi-arrow-right"></i></button>
+    </div>
+  </div>
+</div>

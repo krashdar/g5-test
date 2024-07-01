@@ -38,22 +38,24 @@ export class BlocksComponent extends Unsubscriber implements OnInit {
       .subscribe(response => {
         if (response?.items) {
           this.totalResultCount = response.total_count;
-          this.totalPages = this.totalResultCount % 20;
+          this.totalPages = this.totalResultCount / 20 > Math.floor(this.totalResultCount / 20)
+            ? Math.floor(this.totalResultCount / 20) + 1
+            : this.totalResultCount / 20;
           this.users = response.items;
         }
-      })
+      });
   }
 
-  onSearch(){
-    this.search(this.currentPage)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe()
+  onSearch() {
+    this.search(1)
+      .subscribe();
   }
+
   search(currentPage: number) {
     const query = this.searchForm.get('query')?.value;
     if (query) {
       return this.githubService.searchUsers(query, currentPage)
-        .pipe(take(1))
+        .pipe(take(1));
     } else return of();
   }
 
