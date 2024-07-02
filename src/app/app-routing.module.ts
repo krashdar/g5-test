@@ -11,6 +11,6 @@ export const routes: Routes = [
   { path: 'auth', component: AuthComponent },
   { path: 'blocks', component: BlocksComponent, ...canActivate(redirectUnauthorized) },
   { path: 'table', component: TableComponent, ...canActivate(redirectUnauthorized) },
-  { path: 'detail/:id', component: DetailComponent, ...canActivate(redirectUnauthorized) },
+  { path: 'detail/:username', component: DetailComponent, ...canActivate(redirectUnauthorized) },
   { path: '**', redirectTo: 'blocks' }
 ];

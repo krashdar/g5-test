@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Auth, User, signInWithEmailAndPassword, signInWithPopup, GithubAuthProvider, signOut, onAuthStateChanged } from '@angular/fire/auth';
+import {
+  Auth,
+  GithubAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  User
+} from '@angular/fire/auth';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { createUserWithEmailAndPassword } from '@firebase/auth';
 
@@ -24,7 +31,7 @@ export class AuthService {
   }
 
   signUp(email: string, password: string) {
-    return from(createUserWithEmailAndPassword(this.auth, email, password))
+    return from(createUserWithEmailAndPassword(this.auth, email, password));
   }
 
   signInWithEmail(email: string, password: string) {

@@ -20,7 +20,8 @@ export class NavbarComponent implements OnInit {
     this.user$ = this.authService.getUser();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   logout() {
     this.authService.signOut().subscribe(() => {

@@ -1,4 +1,4 @@
-<div class="container mt-5">
+<div class="container mt-3 pb-3">
   <div class="row mb-3">
     <div class="col-12">
       <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
@@ -18,12 +18,14 @@
         <p class="text-muted">Total results: {{ totalResultCount }}</p>
       </div>
     </ng-template>
-    <div *ngFor="let user of users" class="col-md-3 mb-3">
-      <div class="card" (click)="onSelectUser(user.login)" style="cursor: pointer;">
-        <img [src]="user.avatar_url" class="card-img-top" alt="{{ user.login }}">
-        <div class="card-body">
-          <h5 class="card-title">{{ user.login }}</h5>
-          <a [href]="user.html_url" target="_blank" class="btn btn-secondary btn-sm" (click)="onViewProfile($event)">View Profile</a>
+    <div class="row" #resultsContainer>
+      <div *ngFor="let user of users" class="col-md-3 mb-3">
+        <div class="card" (click)="onSelectUser(user.login)" style="cursor: pointer;">
+          <img [src]="user.avatar_url" class="card-img-top" alt="{{ user.login }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ user.login }}</h5>
+            <a [href]="user.html_url" target="_blank" class="btn btn-secondary btn-sm" (click)="onViewProfile($event)">View Profile</a>
+          </div>
         </div>
       </div>
     </div>

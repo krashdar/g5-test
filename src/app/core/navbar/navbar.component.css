@@ -1,15 +1,33 @@
 .navbar {
-    background-color: #f8f9fa;
+  background-color: #f8f9fa;
 }
 
 .navbar-nav {
-    margin-left: auto;
+  margin-left: auto;
+
+  .dropdown-toggle {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .nav-link {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .rounded-circle {
-    border-radius: 50%;
+  border-radius: 50%;
+}
+
+.user-icon-as-photo {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
+.user-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
 }

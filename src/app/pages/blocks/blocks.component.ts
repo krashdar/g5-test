@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { GithubService } from '../../core/services/github-service/github.service';
@@ -14,6 +14,8 @@ import { Unsubscriber } from '../../core/unsubscriber';
   styleUrls: ['./blocks.component.css']
 })
 export class BlocksComponent extends Unsubscriber implements OnInit {
+  @ViewChild('resultsContainer') resultsContainer!: ElementRef;
+
   searchForm: FormGroup;
   users: any[] = [];
   totalResultCount: number = 0;
@@ -77,5 +79,9 @@ export class BlocksComponent extends Unsubscriber implements OnInit {
       .pipe(takeUntil(this.unsubscribe$))
       // safe change currentPage when error occurred
       .subscribe(() => this.currentPage = newCurrentPage);
+
+    if (this.resultsContainer && this.resultsContainer.nativeElement) {
+      this.resultsContainer.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 }

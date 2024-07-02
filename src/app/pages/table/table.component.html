@@ -1,4 +1,4 @@
-<div class="container mt-5">
+<div class="container mt-3 pb-5">
   <div class="row mb-3">
     <div class="col-12">
       <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
@@ -37,7 +37,7 @@
       </div>
     </ng-template>
     <div *ngIf="users.length > 0" class="col-12">
-      <div class="table-responsive">
+      <div #resultsContainer class="table-responsive">
         <table class="table table-bordered">
           <thead>
           <tr>

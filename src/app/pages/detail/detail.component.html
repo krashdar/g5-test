@@ -1,1 +1,39 @@
-<p>detail works!</p>
+<div class="container mt-3 pb-3" *ngIf="user">
+  <div class="card">
+    <div class="card-header">
+      <h2>{{ user.login }}</h2>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4">
+          <img [src]="user.avatar_url" class="img-fluid" alt="{{ user.login }}">
+        </div>
+        <div class="col-md-8">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Username:</strong>&nbsp;{{ user.login }}</li>
+            <li class="list-group-item"><strong>ID:</strong>&nbsp;{{ user.id }}</li>
+            <li class="list-group-item"><strong>Node ID:</strong>&nbsp;{{ user.node_id }}</li>
+            <li class="list-group-item"><strong>Type:</strong>&nbsp;{{ user.type }}</li>
+            <li *ngIf="user.gravatar_id" class="list-group-item"><strong>Gravatar ID:</strong>&nbsp;{{ user.gravatar_id }}</li>
+            <li class="list-group-item"><strong>Profile:</strong>&nbsp;<a [href]="user.html_url" target="_blank">{{ user.html_url }}</a></li>
+            <li class="list-group-item"><strong>Site Admin:</strong>&nbsp;<input type="checkbox" [checked]="user.site_admin" disabled></li>
+            <li class="list-group-item"><strong>Name:</strong>&nbsp;{{ user.name || 'N/A' }}</li>
+            <li class="list-group-item"><strong>Company:</strong>&nbsp;{{ user.company || 'N/A' }}</li>
+            <li class="list-group-item"><strong>Blog:</strong>&nbsp;<a *ngIf="user.blog" [href]="user.blog" target="_blank">{{ user.blog }}</a><span *ngIf="!user.blog">N/A</span></li>
+            <li class="list-group-item"><strong>Location:</strong>&nbsp;{{ user.location || 'N/A' }}</li>
+            <li class="list-group-item"><strong>Email:</strong>&nbsp;<a *ngIf="user.email" [href]="'mailto:' + user.email">{{ user.email }}</a><span *ngIf="!user.email">N/A</span></li>
+            <li class="list-group-item"><strong>Hireable:</strong>&nbsp;{{ user.hireable ? 'Yes' : 'No' }}</li>
+            <li class="list-group-item"><strong>Bio:</strong>&nbsp;{{ user.bio || 'N/A' }}</li>
+            <li class="list-group-item"><strong>Twitter Username:</strong>&nbsp;<a *ngIf="user.twitter_username" [href]="'https://twitter.com/' + user.twitter_username" target="_blank">{{ user.twitter_username }}</a><span *ngIf="!user.twitter_username">N/A</span></li>
+            <li class="list-group-item"><strong>Public Repos:</strong>&nbsp;{{ user.public_repos }}</li>
+            <li class="list-group-item"><strong>Public Gists:</strong>&nbsp;{{ user.public_gists }}</li>
+            <li class="list-group-item"><strong>Followers:</strong>&nbsp;{{ user.followers }}</li>
+            <li class="list-group-item"><strong>Following:</strong>&nbsp;{{ user.following }}</li>
+            <li class="list-group-item"><strong>Created At:</strong>&nbsp;{{ user.created_at | date: 'dd.MM.yyyy' : 'ru-RU' }}</li>
+            <li class="list-group-item"><strong>Updated At:</strong>&nbsp;{{ user.updated_at | date: 'dd.MM.yyyy' :'ru-RU' }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

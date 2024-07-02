@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TABLE_COLUMNS, TableColumn } from './table.config';
@@ -15,6 +15,7 @@ import { of, switchMap, take, takeUntil, tap } from 'rxjs';
   styleUrls: ['./table.component.css']
 })
 export class TableComponent extends Unsubscriber implements OnInit {
+  @ViewChild('resultsContainer') resultsContainer!: ElementRef;
 
   searchForm: FormGroup;
   users: any[] = [];
@@ -107,5 +108,9 @@ export class TableComponent extends Unsubscriber implements OnInit {
       .pipe(takeUntil(this.unsubscribe$))
       // safe change currentPage when error occurred
       .subscribe(() => this.currentPage = newCurrentPage);
+
+    if (this.resultsContainer && this.resultsContainer.nativeElement) {
+      this.resultsContainer.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
+    }
   }
 }

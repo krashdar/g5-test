@@ -23,12 +23,13 @@ export class GithubService {
     this.searchResult$ = this.searchResultSubject.asObservable();
   }
 
-  searchUsers(query: string, page: number, perPage: number = 20, sort?: string, order?:string): Observable<any> {
+  searchUsers(query: string, page: number, perPage: number = 20, sort?: string, order?: string): Observable<any> {
     return this.searchUsersReq(query, page, perPage, sort, order)
       .pipe(tap(x => this.searchResultSubject.next(x)));
   }
-  searchUsersReq(query: string, page: number, perPage: number = 20, sort?: string, order?:string): Observable<any> {
-    return this.http.get(`${ this.BASE_URL }/search/users?q=${ query }&page=${page}&per_page=${ perPage }${ sort ? `&sort=${ sort }` : '' }${ order ? `&order=${ order }` : '' }`)
+
+  searchUsersReq(query: string, page: number, perPage: number = 20, sort?: string, order?: string): Observable<any> {
+    return this.http.get(`${ this.BASE_URL }/search/users?q=${ query }&page=${ page }&per_page=${ perPage }${ sort ? `&sort=${ sort }` : '' }${ order ? `&order=${ order }` : '' }`)
       .pipe(catchError(this.handleError.bind(this)));
   }
 
