@@ -1,0 +1,28 @@
+<div class="row mb-3">
+  <div class="col-12">
+    <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+      <div class="input-group mb-3">
+        <input formControlName="query" type="text" class="form-control" placeholder="Search GitHub users">
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="sort" class="form-label">Sort By:</label>
+          <select formControlName="sort" id="sort" class="form-select">
+            <option value="">Best Match</option>
+            <option value="followers">Followers</option>
+            <option value="repositories">Repositories</option>
+            <option value="joined">Joined</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label for="order" class="form-label">Order:</label>
+          <select formControlName="order" id="order" class="form-select">
+            <option value="desc">Descending</option>
+            <option value="asc">Ascending</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

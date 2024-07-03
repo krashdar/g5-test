@@ -1,21 +1,12 @@
 <div class="container mt-3 pb-3">
-  <div class="row mb-3">
-    <div class="col-12">
-      <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
-        <div class="input-group">
-          <input formControlName="query" type="text" class="form-control" placeholder="Search GitHub users">
-          <button type="submit" class="btn btn-primary">Search</button>
-        </div>
-      </form>
-    </div>
-  </div>
+  <app-search-bar></app-search-bar>
   <div class="row">
     <div *ngIf="users.length === 0; else totalTemplate" class="col-12">
       <p class="text-muted">No results found.</p>
     </div>
     <ng-template #totalTemplate>
       <div class="col-12">
-        <p class="text-muted">Total results: {{ totalResultCount }}</p>
+        <p class="text-muted">Total results: {{ searchStateService.totalResultsCount$ | async }}</p>
       </div>
     </ng-template>
     <div class="row" #resultsContainer>
@@ -35,9 +26,9 @@
       <p>Displaying {{ users.length }} items</p>
     </div>
     <div class="col-md-6 text-end">
-      <button class="btn btn-link" [class.hidden]="currentPage <= 1" (click)="onPageChange('prev')"><i class="bi bi-arrow-left"></i></button>
-      <span class="mx-2">{{ currentPage }}</span>
-      <button class="btn btn-link" [class.hidden]="currentPage >= totalPages" (click)="onPageChange('next')"><i class="bi bi-arrow-right"></i></button>
+      <button class="btn btn-link" [class.hidden]="searchStateService.getCurrentPage() <= 1" (click)="onPageChange('prev')"><i class="bi bi-arrow-left"></i></button>
+      <span class="mx-2">{{ searchStateService.getCurrentPage() }}</span>
+      <button class="btn btn-link" [class.hidden]="searchStateService.getCurrentPage() >= searchStateService.getTotalPagesCount()" (click)="onPageChange('next')"><i class="bi bi-arrow-right"></i></button>
     </div>
   </div>
 </div>

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { SearchStateService } from '../search-state-service/search-state.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,22 +11,24 @@ export class GithubService {
 
   private readonly BASE_URL = 'https://api.github.com';
 
-  public searchResult$: Observable<any>;
-  private searchResultSubject: BehaviorSubject<any>;
+  private searchResultSubject = new BehaviorSubject<any>({});
+  public searchResult$ = this.searchResultSubject.asObservable();
 
   public clearSearchResultSubject(): void {
     this.searchResultSubject.next({});
   }
 
   constructor(private http: HttpClient,
-              private toastr: ToastrService) {
-    this.searchResultSubject = new BehaviorSubject<any>({});
-    this.searchResult$ = this.searchResultSubject.asObservable();
+              private toastr: ToastrService,
+              private searchStateService: SearchStateService) {
   }
 
-  searchUsers(query: string, page: number, perPage: number = 20, sort?: string, order?: string): Observable<any> {
-    return this.searchUsersReq(query, page, perPage, sort, order)
-      .pipe(tap(x => this.searchResultSubject.next(x)));
+  searchUsers(query: string, page: number, sort?: string, order?: string): Observable<any> {
+    return this.searchUsersReq(query, page, 20, sort, order)
+      .pipe(tap(x => {
+        this.searchResultSubject.next(x);
+        this.searchStateService.setTotalResultsCount(x.total_count);
+      }));
   }
 
   searchUsersReq(query: string, page: number, perPage: number = 20, sort?: string, order?: string): Observable<any> {

@@ -1,37 +1,29 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { GithubService } from '../../core/services/github-service/github.service';
 import { Router, RouterLink } from '@angular/router';
-import { of, take, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { Unsubscriber } from '../../core/unsubscriber';
+import { SearchStateService } from '../../core/services/search-state-service/search-state.service';
+import { SearchBarComponent } from '../../core/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-blocks',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, SearchBarComponent],
   templateUrl: './blocks.component.html',
   styleUrls: ['./blocks.component.css']
 })
 export class BlocksComponent extends Unsubscriber implements OnInit {
   @ViewChild('resultsContainer') resultsContainer!: ElementRef;
 
-  searchForm: FormGroup;
   users: any[] = [];
-  totalResultCount: number = 0;
-  currentPage: number = 1;
-  totalPages: number = 1;
 
-  constructor(private fb: FormBuilder,
-              private githubService: GithubService,
+  constructor(private githubService: GithubService,
+              public searchStateService: SearchStateService,
               private router: Router) {
     super();
-
-    this.searchForm = this.fb.group({
-      query: ['']
-    });
-
-    this.githubService.clearSearchResultSubject();
   }
 
   ngOnInit(): void {
@@ -39,26 +31,17 @@ export class BlocksComponent extends Unsubscriber implements OnInit {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(response => {
         if (response?.items) {
-          this.totalResultCount = response.total_count;
-          this.totalPages = this.totalResultCount / 20 > Math.floor(this.totalResultCount / 20)
-            ? Math.floor(this.totalResultCount / 20) + 1
-            : this.totalResultCount / 20;
           this.users = response.items;
         }
       });
-  }
 
-  onSearch() {
-    this.search(1)
-      .subscribe();
-  }
-
-  search(currentPage: number) {
-    const query = this.searchForm.get('query')?.value;
-    if (query) {
-      return this.githubService.searchUsers(query, currentPage)
-        .pipe(take(1));
-    } else return of();
+    this.searchStateService.currentPage$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        if (this.resultsContainer && this.resultsContainer.nativeElement) {
+          this.resultsContainer.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
+        }
+      });
   }
 
   onSelectUser(login: string) {
@@ -70,18 +53,13 @@ export class BlocksComponent extends Unsubscriber implements OnInit {
   }
 
   onPageChange(direction: 'prev' | 'next') {
-    const newCurrentPage = direction === 'prev' && this.currentPage > 1
-      ? this.currentPage - 1
-      : direction === 'next' && this.currentPage < this.totalPages
-        ? this.currentPage + 1
-        : this.currentPage;
-    this.search(newCurrentPage)
-      .pipe(takeUntil(this.unsubscribe$))
-      // safe change currentPage when error occurred
-      .subscribe(() => this.currentPage = newCurrentPage);
+    const currentPage = this.searchStateService.getCurrentPage();
+    const newCurrentPage = direction === 'prev' && currentPage > 1
+      ? currentPage - 1
+      : direction === 'next' && currentPage < this.searchStateService.getTotalPagesCount()
+        ? currentPage + 1
+        : currentPage;
 
-    if (this.resultsContainer && this.resultsContainer.nativeElement) {
-      this.resultsContainer.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    this.searchStateService.setCurrentPage(newCurrentPage);
   }
 }
